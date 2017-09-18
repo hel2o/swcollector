@@ -88,10 +88,7 @@ func SendToTransfer(metrics []*model.MetricValue) {
 			}
 		}
 	}
-
-	if debug {
-		log.Println("<=", &resp)
-	}
+	log.Println("<=", &resp)
 }
 
 func array_include(array_a []string, array_b []string) bool { //b include a

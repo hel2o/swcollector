@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"github.com/gaochao1/sw"
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/sw"
+	"github.com/hel2o/swcollector/g"
 	"log"
 )
 

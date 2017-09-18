@@ -20,6 +20,6 @@ import (
 // 4.0.5 add custom metric,custom host
 // 4.0.6.1 fix channal closed bug
 const (
-	VERSION          = "4.0.6.1"
+	VERSION          = "4.0.6.1_QF"
 	COLLECT_INTERVAL = time.Second
 )

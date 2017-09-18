@@ -4,10 +4,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
 
-	"github.com/gaochao1/sw"
+	"github.com/hel2o/sw"
 	"github.com/toolkits/slice"
 
 	"strconv"
@@ -401,7 +401,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 func pingCheck(ip string) bool {
 	var pingResult bool
 	for i := 0; i < pingRetry; i++ {
-		pingResult = sw.Ping(ip, pingTimeout, fastPingMode)
+		pingResult = sw.Ping(ip, pingTimeout, pingRetry, fastPingMode)
 		if pingResult == true {
 			break
 		}

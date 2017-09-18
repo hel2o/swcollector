@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gaochao1/swcollector/cron"
-	"github.com/gaochao1/swcollector/funcs"
-	"github.com/gaochao1/swcollector/g"
-	"github.com/gaochao1/swcollector/http"
+	"github.com/hel2o/swcollector/cron"
+	"github.com/hel2o/swcollector/funcs"
+	"github.com/hel2o/swcollector/g"
+	"github.com/hel2o/swcollector/http"
 )
 
 func main() {

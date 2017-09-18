@@ -1,7 +1,7 @@
 package funcs
 
 import (
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
 	"strings"
 )

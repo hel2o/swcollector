@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/gaochao1/sw"
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/sw"
+	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
 )
 
@@ -15,9 +15,13 @@ type SwPing struct {
 }
 
 func PingMetrics() (L []*model.MetricValue) {
-
-	chs := make([]chan SwPing, len(AliveIp))
-	for i, ip := range AliveIp {
+	vpns := g.Config().Switch.VpnRange
+	vpnAndAlive := AliveIp
+	for _, vpn := range vpns {
+		vpnAndAlive = append(vpnAndAlive, vpn)
+	}
+	chs := make([]chan SwPing, len(vpnAndAlive))
+	for i, ip := range vpnAndAlive {
 		if ip != "" {
 			chs[i] = make(chan SwPing)
 			go pingMetrics(ip, chs[i])
@@ -26,17 +30,20 @@ func PingMetrics() (L []*model.MetricValue) {
 
 	for _, ch := range chs {
 		swPing := <-ch
+		if swPing.Ping == -1 {
+			log.Println(swPing.Ip, swPing.Ping)
+		}
 		L = append(L, GaugeValueIp(time.Now().Unix(), swPing.Ip, "switch.Ping", swPing.Ping))
-	}
-
+	}	
 	return L
 }
 
 func pingMetrics(ip string, ch chan SwPing) {
 	var swPing SwPing
-	timeout := g.Config().Switch.PingTimeout * g.Config().Switch.PingRetry
+	timeout := g.Config().Switch.PingTimeout
+	retry := g.Config().Switch.PingRetry
 	fastPingMode := g.Config().Switch.FastPingMode
-	rtt, err := sw.PingRtt(ip, timeout, fastPingMode)
+	rtt, err := sw.PingRtt(ip, timeout, retry, fastPingMode)
 	if err != nil {
 		log.Println(ip, err)
 		swPing.Ip = ip

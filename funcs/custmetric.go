@@ -6,9 +6,9 @@ import (
 
 	"time"
 
-	go_snmp "github.com/gaochao1/gosnmp"
-	"github.com/gaochao1/sw"
-	"github.com/gaochao1/swcollector/g"
+	go_snmp "github.com/hel2o/gosnmp"
+	"github.com/hel2o/sw"
+	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
 )
 
@@ -77,7 +77,7 @@ func CustMetrics() (L []*model.MetricValue) {
 
 		}
 
-	}
+}
 
 	return L
 }

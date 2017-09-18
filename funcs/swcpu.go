@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/gaochao1/sw"
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/sw"
+	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
 )
 

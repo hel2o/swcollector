@@ -2,8 +2,8 @@ package http
 
 import (
 	"fmt"
-	"github.com/gaochao1/swcollector/funcs"
-	"github.com/gaochao1/swcollector/g"
+	"github.com/hel2o/swcollector/funcs"
+	"github.com/hel2o/swcollector/g"
 	"net/http"
 	"strings"
 	"time"

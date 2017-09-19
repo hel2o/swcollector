@@ -283,7 +283,7 @@
         "pingRetry": 3,
         "community": "cf-read",
         "snmpTimeout": 1000,
-        "snmpRetry": 5,
+        "snmpRetry": 3,
         "ignoreIface": [
             "Nu",
             "NU",
@@ -310,7 +310,7 @@
         "outQLenPktlimit": 0,
         "fastPingMode": true,
         "limitConcur": 10000,
-        "limitCon": 4
+        "limitCon": 6
     },
     "switchhosts": {
         "enabled": true,

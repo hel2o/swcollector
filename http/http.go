@@ -20,6 +20,7 @@ func init() {
 	configPageRoutes()
 	configPushRoutes()
 	configSwRoutes()
+	configApiRoutes()
 }
 
 func RenderJson(w http.ResponseWriter, v interface{}) {

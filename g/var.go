@@ -4,6 +4,9 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
+
+	"github.com/toolkits/slice"
 
 	"time"
 
@@ -68,13 +71,13 @@ func SendToTransfer(metrics []*model.MetricValue) {
 		for _, metric := range metrics {
 			metric_tags := strings.Split(metric.Tags, ",")
 			if in_array(metric.Endpoint, debug_endpoints) && in_array(metric.Metric, debug_metrics) {
+				if debug_tags == "" {
+					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
+					continue
+				}
 				if array_include(debug_Tags, metric_tags) {
 					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
 				}
-				if debug_tags == "" {
-					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
-				}
-
 			}
 		}
 	}
@@ -109,4 +112,30 @@ func in_array(a string, array []string) bool {
 		}
 	}
 	return false
+}
+
+var (
+	ips     []string
+	ipsLock = new(sync.Mutex)
+)
+
+func TrustableIps() []string {
+	ipsLock.Lock()
+	defer ipsLock.Unlock()
+	ips := Config().Http.TrustIps
+	return ips
+}
+
+func IsTrustable(remoteAddr string) bool {
+	ip := remoteAddr
+	idx := strings.LastIndex(remoteAddr, ":")
+	if idx > 0 {
+		ip = remoteAddr[0:idx]
+	}
+
+	if ip == "127.0.0.1" {
+		return true
+	}
+
+	return slice.ContainsString(TrustableIps(), ip)
 }

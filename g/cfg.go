@@ -15,10 +15,10 @@ type DebugmetricConfig struct {
 }
 
 type SwitchConfig struct {
-	Enabled bool     `json:"enabled"`
-	IpRange []string `json:"ipRange"`
+	Enabled  bool     `json:"enabled"`
+	IpRange  []string `json:"ipRange"`
 	VpnRange []string `json:"vpnRange"`
-	Gosnmp  bool     `json:"gosnmp"`
+	Gosnmp   bool     `json:"gosnmp"`
 
 	PingTimeout int `json:"pingTimeout"`
 	PingRetry   int `json:"pingRetry"`
@@ -49,13 +49,6 @@ type SwitchConfig struct {
 	FastPingMode          bool     `json:"fastPingMode"`
 }
 
-type HeartbeatConfig struct {
-	Enabled  bool   `json:"enabled"`
-	Addr     string `json:"addr"`
-	Interval int    `json:"interval"`
-	Timeout  int    `json:"timeout"`
-}
-
 type TransferConfig struct {
 	Enabled  bool   `json:"enabled"`
 	Addr     string `json:"addr"`
@@ -64,8 +57,9 @@ type TransferConfig struct {
 }
 
 type HttpConfig struct {
-	Enabled bool   `json:"enabled"`
-	Listen  string `json:"listen"`
+	Enabled  bool     `json:"enabled"`
+	Listen   string   `json:"listen"`
+	TrustIps []string `json:trustIps`
 }
 
 type SwitchHostsConfig struct {
@@ -82,7 +76,6 @@ type GlobalConfig struct {
 	Debug         bool                 `json:"debug"`
 	Debugmetric   *DebugmetricConfig   `json:"debugmetric`
 	Switch        *SwitchConfig        `json:"switch"`
-	Heartbeat     *HeartbeatConfig     `json:"heartbeat"`
 	Transfer      *TransferConfig      `json:"transfer"`
 	SwitchHosts   *SwitchHostsConfig   `json:switchhosts`
 	CustomMetrics *CustomMetricsConfig `json:customMetrics`
@@ -92,8 +85,23 @@ type GlobalConfig struct {
 var (
 	ConfigFile string
 	config     *GlobalConfig
+	reloadType bool
 	lock       = new(sync.RWMutex)
+	rlock      = new(sync.RWMutex)
 )
+
+func SetReloadType(t bool) {
+	rlock.RLock()
+	defer rlock.RUnlock()
+	reloadType = t
+	return
+}
+
+func ReloadType() bool {
+	rlock.RLock()
+	defer rlock.RUnlock()
+	return reloadType
+}
 
 func Config() *GlobalConfig {
 	lock.RLock()
@@ -127,7 +135,7 @@ func ParseConfig(cfg string) {
 	defer lock.Unlock()
 
 	config = &c
-
+	SetReloadType(false)
 	log.Println("read config file:", cfg, "successfully")
 
 }

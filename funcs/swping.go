@@ -15,13 +15,12 @@ type SwPing struct {
 }
 
 func PingMetrics() (L []*model.MetricValue) {
+	startTime := time.Now()
 	vpns := g.Config().Switch.VpnRange
-	vpnAndAlive := AliveIp
-	for _, vpn := range vpns {
-		vpnAndAlive = append(vpnAndAlive, vpn)
-	}
-	chs := make([]chan SwPing, len(vpnAndAlive))
-	for i, ip := range vpnAndAlive {
+	ipRange := g.Config().Switch.IpRange
+	allIp := append(ipRange, vpns...)
+	chs := make([]chan SwPing, len(allIp))
+	for i, ip := range allIp {
 		if ip != "" {
 			chs[i] = make(chan SwPing)
 			go pingMetrics(ip, chs[i])
@@ -31,10 +30,15 @@ func PingMetrics() (L []*model.MetricValue) {
 	for _, ch := range chs {
 		swPing := <-ch
 		if swPing.Ping == -1 {
-			log.Println(swPing.Ip, swPing.Ping)
+			if g.Config().Debug {
+				log.Println(swPing.Ip, swPing.Ping)
+			}
 		}
 		L = append(L, GaugeValueIp(time.Now().Unix(), swPing.Ip, "switch.Ping", swPing.Ping))
-	}	
+	}
+	endTime := time.Now()
+	log.Printf("UpdatePing complete. Process time %s.", endTime.Sub(startTime))
+
 	return L
 }
 

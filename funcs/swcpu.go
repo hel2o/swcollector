@@ -15,7 +15,7 @@ type SwCpu struct {
 }
 
 func CpuMetrics() (L []*model.MetricValue) {
-
+	startTime := time.Now()
 	chs := make([]chan SwCpu, len(AliveIp))
 	for i, ip := range AliveIp {
 		if ip != "" {
@@ -31,6 +31,8 @@ func CpuMetrics() (L []*model.MetricValue) {
 		}
 		L = append(L, GaugeValueIp(time.Now().Unix(), swCpu.Ip, "switch.CpuUtilization", swCpu.CpuUtil))
 	}
+	endTime := time.Now()
+	log.Printf("UpdateCpuUtilization complete. Process time %s.", endTime.Sub(startTime))
 
 	return L
 }
@@ -40,7 +42,9 @@ func cpuMetrics(ip string, ch chan SwCpu) {
 
 	cpuUtili, err := sw.CpuUtilization(ip, g.Config().Switch.Community, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 	if err != nil {
-		log.Println(err)
+		if g.Config().Debug {
+			log.Println(err)
+		}
 		close(ch)
 		return
 	}

@@ -15,7 +15,7 @@ type SwMem struct {
 }
 
 func MemMetrics() (L []*model.MetricValue) {
-
+	startTime := time.Now()
 	chs := make([]chan SwMem, len(AliveIp))
 	for i, ip := range AliveIp {
 		if ip != "" {
@@ -31,6 +31,9 @@ func MemMetrics() (L []*model.MetricValue) {
 		}
 		L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, "switch.MemUtilization", swMem.MemUtili))
 	}
+	endTime := time.Now()
+	log.Printf("UpdateMemUtilization complete. Process time %s.", endTime.Sub(startTime))
+
 	return L
 }
 
@@ -39,7 +42,9 @@ func memMetrics(ip string, ch chan SwMem) {
 
 	memUtili, err := sw.MemUtilization(ip, g.Config().Switch.Community, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 	if err != nil {
-		log.Println(err)
+		if g.Config().Debug {
+			log.Println(err)
+		}
 		close(ch)
 		return
 	}

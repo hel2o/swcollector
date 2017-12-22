@@ -3,6 +3,7 @@ package funcs
 import (
 	"errors"
 	"log"
+	"strconv"
 
 	"time"
 
@@ -45,16 +46,18 @@ func AllCustmIp(ipRange []string) (allIp []string) {
 }
 
 func CustMetrics() (L []*model.MetricValue) {
+	startTime := time.Now()
 	if !g.Config().CustomMetrics.Enabled {
 		return
 	}
 	chs := make([]chan CustM, 0)
-	for _, ip := range AliveIp {
+	tempAliveIp := append(AliveIp, "10.255.255.254")
+	for _, ip := range tempAliveIp {
 		if ip != "" {
-			chss := make(chan CustM)
 			for _, metric := range g.CustConfig().Metrics {
 				CustmIps := AllCustmIp(metric.IpRange)
 				if InArray(ip, CustmIps) {
+					chss := make(chan CustM)
 					go custMetrics(ip, metric, chss)
 					chs = append(chs, chss)
 				}
@@ -74,10 +77,11 @@ func CustMetrics() (L []*model.MetricValue) {
 			if custmmetric.metrictype == "COUNTER" {
 				L = append(L, CounterValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
 			}
-
 		}
 
-}
+	}
+	endTime := time.Now()
+	log.Printf("UpdateCustmetric complete. Process time %s.", endTime.Sub(startTime))
 
 	return L
 }
@@ -86,7 +90,6 @@ func custMetrics(ip string, metric *g.MetricConfig, ch chan CustM) {
 	var custm CustM
 	var custmmetric CustmMetric
 	var custmmetrics []CustmMetric
-
 	value, err := GetCustMetric(ip, g.Config().Switch.Community, metric.Oid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 	if err != nil {
 		log.Println(ip, metric.Oid, err)
@@ -154,8 +157,15 @@ func interfaceTofloat64(v interface{}) (float64, error) {
 		return float64(value), nil
 	case float64:
 		return value, nil
+	case string:
+		value_parsed, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			return 0, err
+		} else {
+			return value_parsed, nil
+		}
 	default:
-		err = errors.New("value is not digital")
+		err = errors.New("value cannot not Parse to digital")
 		return 0, err
 	}
 }

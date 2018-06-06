@@ -22,6 +22,6 @@ import (
 // 4.0.6.2 fix Vendor bug;add remote config api
 // 4.0.6.3 fix bugs
 const (
-	VERSION          = "4.0.6.3_QF_12-22"
+	VERSION          = "4.0.6.4_QF_4-18"
 	COLLECT_INTERVAL = time.Second
 )

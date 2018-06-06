@@ -29,7 +29,7 @@ func RenderJson(w http.ResponseWriter, v interface{}) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Write(bs)
 }
@@ -66,6 +66,6 @@ func Start() {
 		MaxHeaderBytes: 1 << 30,
 	}
 
-	log.Println("listening", addr)
-	log.Fatalln(s.ListenAndServe())
+	log.Println("https listening", addr)
+	log.Println(s.ListenAndServeTLS("public/ssl/cert.pem", "public/ssl/key.pem"))
 }

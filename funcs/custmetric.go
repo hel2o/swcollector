@@ -51,7 +51,7 @@ func CustMetrics() (L []*model.MetricValue) {
 		return
 	}
 	chs := make([]chan CustM, 0)
-	tempAliveIp := append(AliveIp, "10.255.255.254")
+	tempAliveIp := append(AliveIp, []string{"10.255.255.254", "172.25.70.252"}...)
 	for _, ip := range tempAliveIp {
 		if ip != "" {
 			for _, metric := range g.CustConfig().Metrics {
@@ -77,6 +77,7 @@ func CustMetrics() (L []*model.MetricValue) {
 			if custmmetric.metrictype == "COUNTER" {
 				L = append(L, CounterValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
 			}
+			//log.Println(custm.Ip, custmmetric.metric, custmmetric.value)
 		}
 
 	}

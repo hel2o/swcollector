@@ -3,7 +3,8 @@ package cron
 import (
 	"github.com/hel2o/swcollector/funcs"
 	"github.com/hel2o/swcollector/g"
-	_"github.com/hel2o/swcollector/http"
+	_ "github.com/hel2o/swcollector/http"
+	"github.com/hel2o/swcollector/rpc"
 	"github.com/open-falcon/common/model"
 
 	"log"
@@ -69,7 +70,7 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 		}
 		time.Sleep(100 * time.Millisecond)
 
-		go g.SendToTransfer(mvsSend)
+		go rpc.SendToTransfer(mvsSend)
 	}
 
 	endTime := time.Now()

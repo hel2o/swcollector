@@ -1,122 +1,436 @@
 {
-	"metrics":
-		[
-			{
-			"ipRange":[
-         	   "192.168.99.252"
- 			],
-			"metric":"FortiGate.SysSessionCount",
-			"tag":"",
-			"type":"GAUGE",
-			"oid":"1.3.6.1.4.1.12356.101.4.1.8.0"
-			},
-			{
-			"ipRange":[
-         	   "192.168.99.252"
- 			],
-			"metric":"FortiGate.SysSessionRate",
-			"tag":"",
-			"type":"GAUGE",
-			"oid":"1.3.6.1.4.1.12356.101.4.1.14.0"
-			},
-			{
-			"ipRange":[
-         	   "192.168.99.240"
- 			],
-			"metric":"huawei.AR2240C.Temperature",
-			"tag":"",
-			"type":"GAUGE",
-			"oid":"1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.2883593"
-			},
-			{
-			"ipRange":[
-						 "192.168.99.235"
-			],
-			"metric":"huawei.SecStatAlgQqSessCount",
-			"tag":"",
-			"type":"GAUGE",
-			"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.40.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonIcmpSes",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.1.8.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonTotalSe",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.1.4.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonUdpSess",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.1.7.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonDnsSess",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.16.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonHttpSes",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.7.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonSmtpSes",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.4.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonRtspSes",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.13.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonFtpSess",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.2.1.0"
-		},
-		{
-		"ipRange":[
-					 "192.168.99.235"
-		],
-		"metric":"huawei.SecStatMonTcpSess",
-		"tag":"",
-		"type":"GAUGE",
-		"oid":"1.3.6.1.4.1.2011.6.122.15.1.2.1.6.0"
-		}
-		]
+  "metrics": [{
+      "ipRange": [
+        "172.25.0.14"
+      ],
+      "metric": "huawei.AR2240C.Temperature",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.2883593"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatAlgQqSessCount",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.40.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonIcmpSes",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.1.8.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonTotalSe",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.1.4.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonUdpSess",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.1.7.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonDnsSess",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.16.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonHttpSes",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.7.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonSmtpSes",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.4.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonRtspSes",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.13.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonFtpSess",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.2.1.0"
+    },
+    {
+      "ipRange": [
+        "192.168.99.235",
+        "192.168.99.252"
+      ],
+      "metric": "huawei.SecStatMonTcpSess",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.6.122.15.1.2.1.6.0"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.67371017"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.67633161"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.67895305"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.68681737"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.68943881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis1.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.69206025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.134479881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.134742025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.135004169"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.135790601"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.136052745"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.Temperature.Chassis2.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.11.136314889"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.67371017"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.67633161"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.67895305"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.68681737"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.68943881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis1.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.69206025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.134479881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.134742025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.135004169"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.135790601"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.136052745"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.CpuUtilization.Chassis2.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.5.136314889"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.67371017"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.67633161"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.67895305"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.68681737"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.68943881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis1.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.69206025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot1",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.134479881"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot2",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.134742025"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot3",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.135004169"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot6",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.135790601"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot7",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.136052745"
+    },
+    {
+      "ipRange": [
+        "10.255.255.254"
+      ],
+      "metric": "switch.MemUtilization.Chassis2.Slot8",
+      "tag": "",
+      "type": "GAUGE",
+      "oid": "1.3.6.1.4.1.2011.5.25.31.1.1.1.1.7.136314889"
+    }
+  ]
 }

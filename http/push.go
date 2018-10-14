@@ -2,9 +2,10 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/hel2o/swcollector/g"
-	"github.com/open-falcon/common/model"
 	"net/http"
+
+	"github.com/hel2o/swcollector/rpc"
+	"github.com/open-falcon/common/model"
 )
 
 func configPushRoutes() {
@@ -22,7 +23,7 @@ func configPushRoutes() {
 			return
 		}
 
-		g.SendToTransfer(metrics)
+		rpc.SendToTransfer(metrics)
 		w.Write([]byte("success"))
 	})
 }

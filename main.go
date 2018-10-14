@@ -9,6 +9,7 @@ import (
 	"github.com/hel2o/swcollector/funcs"
 	"github.com/hel2o/swcollector/g"
 	"github.com/hel2o/swcollector/http"
+	"github.com/hel2o/swcollector/rpc"
 )
 
 func main() {
@@ -25,8 +26,8 @@ func main() {
 	}
 	g.ParseConfig(*cfg)
 	if g.Config().SwitchHosts.Enabled {
-		hostcfg := g.Config().SwitchHosts.Hosts
-		g.ParseHostConfig(hostcfg)
+		hostCfg := g.Config().SwitchHosts.Hosts
+		g.ParseHostConfig(hostCfg)
 	}
 	if g.Config().CustomMetrics.Enabled {
 		custMetrics := g.Config().CustomMetrics.Template
@@ -34,7 +35,8 @@ func main() {
 	}
 	g.InitRootDir()
 	g.InitLocalIps()
-	g.InitRpcClients()
+	g.InitLocalIp()
+	rpc.InitRpcClients()
 
 	if *check {
 		funcs.CheckCollector()
@@ -47,7 +49,7 @@ func main() {
 	cron.Collect()
 
 	go http.Start()
-
+	go rpc.RpcServerStart()
 	select {}
 
 }

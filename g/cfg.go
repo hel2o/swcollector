@@ -71,7 +71,11 @@ type CustomMetricsConfig struct {
 	Enabled  bool   `json:enbaled`
 	Template string `json:template`
 }
-
+type RpcConfig struct {
+	Enabled    bool   `json:"enabled"`
+	Listen     string `json:"listen"`
+	Management string `json:"management"`
+}
 type GlobalConfig struct {
 	Debug         bool                 `json:"debug"`
 	Debugmetric   *DebugmetricConfig   `json:"debugmetric`
@@ -80,6 +84,7 @@ type GlobalConfig struct {
 	SwitchHosts   *SwitchHostsConfig   `json:switchhosts`
 	CustomMetrics *CustomMetricsConfig `json:customMetrics`
 	Http          *HttpConfig          `json:"http"`
+	Rpc           *RpcConfig           `json:"rpc"`
 }
 
 var (

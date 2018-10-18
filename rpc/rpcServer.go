@@ -27,7 +27,7 @@ func (t *Agent) ReportAgentStatus(args *AgentRequest, resp *AgentResponse) error
 		resp.Status = 1
 		resp.Version = g.VERSION
 		resp.StartTime = g.StartTime
-		resp.RunServerIp =g.LocalIp
+		resp.RunServerIp = g.LocalIp
 		return nil
 	}
 	return errors.New("auth fail")

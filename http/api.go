@@ -6,7 +6,7 @@ import (
 	"github.com/hel2o/swcollector/g"
 	"log"
 	"net/http"
-  "time"
+	"time"
 )
 
 type IfInOutPDU struct {
@@ -59,7 +59,7 @@ func configApiRoutes() {
 		}
 		s := map[string]interface{}{
 			"data": ifInOut,
-      "ts": time.Now().Format("15:04:05"),
+			"ts":   time.Now().Format("15:04:05"),
 		}
 		RenderJson(w, s)
 	})

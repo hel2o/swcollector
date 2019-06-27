@@ -77,7 +77,6 @@ func CustMetrics() (L []*model.MetricValue) {
 			if custmmetric.metrictype == "COUNTER" {
 				L = append(L, CounterValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
 			}
-			//log.Println(custm.Ip, custmmetric.metric, custmmetric.value)
 		}
 
 	}
@@ -91,7 +90,12 @@ func custMetrics(ip string, metric *g.MetricConfig, ch chan CustM) {
 	var custm CustM
 	var custmmetric CustmMetric
 	var custmmetrics []CustmMetric
+	startTime := time.Now()
 	value, err := GetCustMetric(ip, g.Config().Switch.Community, metric.Oid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
+	endTime := time.Now()
+	if g.Config().Debug {
+		log.Printf("ip: %s. metric: %s. Process time %s.", ip, metric.Metric, endTime.Sub(startTime))
+	}
 	if err != nil {
 		log.Println(ip, metric.Oid, err)
 		close(ch)
@@ -128,6 +132,7 @@ func GetCustMetric(ip, community, oid string, timeout, retry int) (float64, erro
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
+
 	return value, err
 }
 

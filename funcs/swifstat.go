@@ -158,6 +158,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 		go coreSwIfMetrics(ip, chs[i], limitCh)
 		time.Sleep(5 * time.Millisecond)
 	}
+	var useTime = make(map[string]int64, len(chs))
 	for i, ch := range chs {
 		select {
 		case chIfStat, ok := <-ch:
@@ -169,6 +170,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 				AliveIp = append(AliveIp, chIfStat.Ip)
 			}
 			if chIfStat.IfStatsList != nil {
+				useTime[chIfStat.Ip] = chIfStat.UseTime
 				if g.Config().Debug {
 					log.Println("IP:", chIfStat.Ip, "PingResult:", chIfStat.PingResult, "len_list:", len(*chIfStat.IfStatsList), "UsedTime:", chIfStat.UseTime)
 				}
@@ -399,7 +401,8 @@ func swIfMetrics() (L []*model.MetricValue) {
 	}
 
 	endTime := time.Now()
-	log.Printf("UpdateIfStats complete. Process time %s. Number of active ip is %d", endTime.Sub(startTime), len(AliveIp))
+	maxIp, maxUseTime := findMaxUseTime(useTime)
+	log.Printf("UpdateIfStats complete. Process time %s. Active ip is %d. Used max time is %s, Latency=%ds.", endTime.Sub(startTime), len(AliveIp), maxIp, maxUseTime)
 
 	if g.Config().Debug {
 		for i, v := range AliveIp {
@@ -446,7 +449,7 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 
 	if !pingResult {
 		endTime = time.Now().Unix()
-		chIfStat.UseTime = (endTime - startTime)
+		chIfStat.UseTime = endTime - startTime
 		<-limitCh
 		ch <- chIfStat
 		return
@@ -470,11 +473,21 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 		}
 
 		endTime = time.Now().Unix()
-		chIfStat.UseTime = (endTime - startTime)
+		chIfStat.UseTime = endTime - startTime
 		<-limitCh
 		ch <- chIfStat
 		return
 	}
 
+	return
+}
+
+func findMaxUseTime(useTime map[string]int64) (maxIp string, maxUseTime int64) {
+	for ip, useTime := range useTime {
+		if useTime > maxUseTime {
+			maxUseTime = useTime
+			maxIp = ip
+		}
+	}
 	return
 }

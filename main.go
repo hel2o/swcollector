@@ -33,6 +33,7 @@ func main() {
 		custMetrics := g.Config().CustomMetrics.Template
 		g.ParseCustConfig(custMetrics)
 	}
+	g.ModifyRlimit()
 	g.InitRootDir()
 	g.InitLocalIps()
 	g.InitLocalIp()

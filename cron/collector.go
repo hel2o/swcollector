@@ -54,7 +54,7 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 	startTime := time.Now()
 
 	//分批次传给transfer
-	n := 10000
+	n := 30000
 	lenMvs := len(mvs)
 
 	div := lenMvs / n
@@ -62,7 +62,6 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 
 	mvsSend := []*model.MetricValue{}
 	for i := 1; i <= div+1; i++ {
-
 		if i < div+1 {
 			mvsSend = mvs[n*(i-1) : n*i]
 		} else {
@@ -75,9 +74,4 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 
 	endTime := time.Now()
 	log.Println("INFO : Send metrics to transfer running in the background. Process time :", endTime.Sub(startTime), "Send metrics :", len(mvs))
-	//if http.ReloadStat {
-	//	funcs.AliveIp = nil
-	//	http.ReloadStat = false
-	//	log.Println("更新完AliveIp", funcs.AliveIp, http.ReloadStat)
-	//}
 }

@@ -33,7 +33,7 @@
         "discardsPktlimit": 0,
         "enabled": true,
         "errorsPktlimit": 0,
-        "fastPingMode": true,
+        "fastPingMode": false,
         "gosnmp": true,
         "ignoreBroadcastPkt": true,
         "ignoreDiscards": true,

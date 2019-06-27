@@ -10,8 +10,9 @@ import (
 )
 
 type SwPing struct {
-	Ip   string
-	Ping float64
+	Ip      string
+	Ping    float64
+	UseTime int64
 }
 
 func PingMetrics() (L []*model.MetricValue) {
@@ -26,9 +27,11 @@ func PingMetrics() (L []*model.MetricValue) {
 			go pingMetrics(ip, chs[i])
 		}
 	}
-
+	var useTime = make(map[string]int64, len(chs))
 	for _, ch := range chs {
 		swPing := <-ch
+		useTime[swPing.Ip] = swPing.UseTime
+
 		if swPing.Ping == -1 {
 			if g.Config().Debug {
 				log.Println(swPing.Ip, swPing.Ping)
@@ -37,17 +40,25 @@ func PingMetrics() (L []*model.MetricValue) {
 		L = append(L, GaugeValueIp(time.Now().Unix(), swPing.Ip, "switch.Ping", swPing.Ping))
 	}
 	endTime := time.Now()
-	log.Printf("UpdatePing complete. Process time %s.", endTime.Sub(startTime))
+	maxIp, maxUseTime := findMaxUseTime(useTime)
+	log.Printf("UpdatePing complete. Process time %s. Used max time is %s, Latency=%ds.", endTime.Sub(startTime), maxIp, maxUseTime)
 
 	return L
 }
 
 func pingMetrics(ip string, ch chan SwPing) {
 	var swPing SwPing
+	var startTime, endTime int64
+
+	startTime = time.Now().Unix()
 	timeout := g.Config().Switch.PingTimeout
 	retry := g.Config().Switch.PingRetry
 	fastPingMode := g.Config().Switch.FastPingMode
 	rtt, err := sw.PingRtt(ip, timeout, retry, fastPingMode)
+
+	endTime = time.Now().Unix()
+	swPing.UseTime = endTime - startTime
+
 	if err != nil {
 		log.Println(ip, err)
 		swPing.Ip = ip

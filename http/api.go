@@ -1,12 +1,13 @@
 package http
 
 import (
-	"github.com/hel2o/sw"
-	"github.com/hel2o/swcollector/funcs"
-	"github.com/hel2o/swcollector/g"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/hel2o/sw"
+	"github.com/hel2o/swcollector/funcs"
+	"github.com/hel2o/swcollector/g"
 )
 
 type IfInOutPDU struct {
@@ -44,7 +45,6 @@ func configApiRoutes() {
 		}
 		var ifInOut IfInOutPDU
 		var err error
-		log.Println(ip, index)
 		inOid := "1.3.6.1.2.1.31.1.1.1.6." + index
 		outOid := "1.3.6.1.2.1.31.1.1.1.10." + index
 		ifInOut.In, err = funcs.GetCustMetric(ip, g.Config().Switch.Community, inOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)

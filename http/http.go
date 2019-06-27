@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
+	//_ "net/http/pprof"
 
 	"github.com/hel2o/swcollector/g"
 )

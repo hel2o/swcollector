@@ -33,6 +33,14 @@ func (t *Agent) ReportAgentStatus(args *AgentRequest, resp *AgentResponse) error
 	return errors.New("auth fail")
 
 }
+func (t *Agent) ReloadSSL(args *AgentRequest, resp *bool) error {
+	if g.Config().Rpc.Management == args.IpAddress {
+		*resp = true
+		return g.KPR.ReloadCert()
+	}
+	return errors.New("auth fail")
+
+}
 
 type Agent int
 

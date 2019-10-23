@@ -1,11 +1,14 @@
 package g
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/hel2o/management-system/tools"
 
 	"github.com/toolkits/slice"
 
@@ -27,7 +30,16 @@ func InitRootDir() {
 var LocalIps []string
 var StartTime int64
 var LocalIp string
+var KPR *tools.KeyPairReload
 
+func StartSSL() {
+	var err error
+	KPR, err = tools.NewKeyPairReload()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+}
 func InitLocalIp() {
 	if Config().Rpc.Enabled {
 		conn, err := net.DialTimeout("tcp", "192.168.99.118:80", time.Second*10)

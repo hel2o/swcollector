@@ -1,6 +1,7 @@
 package http
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -64,8 +65,9 @@ func Start() {
 	s := &http.Server{
 		Addr:           addr,
 		MaxHeaderBytes: 1 << 30,
+		TLSConfig:      &tls.Config{GetCertificate: g.KPR.GetCertificateFunc()},
 	}
 
 	log.Println("https listening", addr)
-	log.Println(s.ListenAndServeTLS("public/ssl/cert.pem", "public/ssl/key.pem"))
+	log.Println(s.ListenAndServeTLS("", ""))
 }

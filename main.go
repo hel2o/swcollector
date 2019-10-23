@@ -34,6 +34,7 @@ func main() {
 		g.ParseCustConfig(custMetrics)
 	}
 	g.ModifyRlimit()
+	g.StartSSL()
 	g.InitRootDir()
 	g.InitLocalIps()
 	g.InitLocalIp()

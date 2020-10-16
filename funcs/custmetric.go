@@ -24,15 +24,6 @@ type CustmMetric struct {
 	metrictype string
 }
 
-func InArray(str string, array []string) bool {
-	for _, s := range array {
-		if str == s {
-			return true
-		}
-	}
-	return false
-}
-
 func AllCustmIp(ipRange []string) (allIp []string) {
 	if len(ipRange) > 0 {
 		for _, sip := range ipRange {
@@ -56,7 +47,7 @@ func CustMetrics() (L []*model.MetricValue) {
 		if ip != "" {
 			for _, metric := range g.CustConfig().Metrics {
 				CustmIps := AllCustmIp(metric.IpRange)
-				if InArray(ip, CustmIps) {
+				if g.InArray(ip, CustmIps) {
 					chss := make(chan CustM)
 					go custMetrics(ip, metric, chss)
 					chs = append(chs, chss)
@@ -91,7 +82,8 @@ func custMetrics(ip string, metric *g.MetricConfig, ch chan CustM) {
 	var custmmetric CustmMetric
 	var custmmetrics []CustmMetric
 	startTime := time.Now()
-	value, err := GetCustMetric(ip, g.Config().Switch.Community, metric.Oid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
+
+	value, err := GetCustMetric(ip, metric.Oid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 	endTime := time.Now()
 	if g.Config().Debug {
 		log.Printf("ip: %s. metric: %s. Process time %s.", ip, metric.Metric, endTime.Sub(startTime))
@@ -114,7 +106,7 @@ func custMetrics(ip string, metric *g.MetricConfig, ch chan CustM) {
 	return
 }
 
-func GetCustMetric(ip, community, oid string, timeout, retry int) (float64, error) {
+func GetCustMetric(ip, oid string, timeout, retry int) (float64, error) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println(ip+" Recovered in CustomMetric, Oid is ", oid, r)
@@ -124,8 +116,9 @@ func GetCustMetric(ip, community, oid string, timeout, retry int) (float64, erro
 	var value float64
 	var err error
 	var snmpPDUs []go_snmp.SnmpPDU
+
 	for i := 0; i < retry; i++ {
-		snmpPDUs, err = sw.RunSnmp(ip, community, oid, method, timeout)
+		snmpPDUs, err = sw.RunSnmp(ip, g.GetCommunity(ip), oid, method, timeout)
 		if len(snmpPDUs) > 0 && err == nil {
 			value, err = interfaceTofloat64(snmpPDUs[0].Value)
 			break

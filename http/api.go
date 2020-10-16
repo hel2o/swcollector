@@ -23,8 +23,8 @@ func configApiRoutes() {
 		if ip == "" {
 			return
 		}
-		log.Println(ip)
-		ifStatsList, err := sw.ListIfStats(ip, g.Config().Switch.Community, g.Config().Switch.SnmpTimeout, []string{}, g.Config().Switch.SnmpRetry, g.Config().Switch.LimitCon, true, false, true, true, true, true, true, true)
+
+		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), g.Config().Switch.SnmpTimeout, []string{}, g.Config().Switch.SnmpRetry, g.Config().Switch.LimitCon, true, false, true, true, true, true, true, true)
 		if err != nil {
 			log.Println(err)
 			return
@@ -47,12 +47,12 @@ func configApiRoutes() {
 		var err error
 		inOid := "1.3.6.1.2.1.31.1.1.1.6." + index
 		outOid := "1.3.6.1.2.1.31.1.1.1.10." + index
-		ifInOut.In, err = funcs.GetCustMetric(ip, g.Config().Switch.Community, inOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
+		ifInOut.In, err = funcs.GetCustMetric(ip, inOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		ifInOut.Out, err = funcs.GetCustMetric(ip, g.Config().Switch.Community, outOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
+		ifInOut.Out, err = funcs.GetCustMetric(ip, outOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 		if err != nil {
 			log.Println(err)
 			return

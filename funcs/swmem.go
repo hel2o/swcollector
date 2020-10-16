@@ -48,7 +48,7 @@ func memMetrics(ip string, ch chan SwMem) {
 	startTime = time.Now().Unix()
 	var swMem SwMem
 
-	memUtili, err := sw.MemUtilization(ip, g.Config().Switch.Community, 2000, g.Config().Switch.SnmpRetry)
+	memUtili, err := sw.MemUtilization(ip, g.GetCommunity(ip), 2000, g.Config().Switch.SnmpRetry)
 	endTime = time.Now().Unix()
 	swMem.UseTime = endTime - startTime
 

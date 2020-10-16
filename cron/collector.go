@@ -70,6 +70,9 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 		time.Sleep(100 * time.Millisecond)
 
 		go rpc.SendToTransfer(mvsSend)
+		if g.Config().Transfer.N9e != "" {
+			go g.N9ePush(mvsSend)
+		}
 	}
 
 	endTime := time.Now()

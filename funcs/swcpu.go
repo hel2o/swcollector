@@ -47,7 +47,7 @@ func cpuMetrics(ip string, ch chan SwCpu) {
 	startTime = time.Now().Unix()
 	var swCpu SwCpu
 
-	cpuUtili, err := sw.CpuUtilization(ip, g.Config().Switch.Community, 2000, g.Config().Switch.SnmpRetry)
+	cpuUtili, err := sw.CpuUtilization(ip, g.GetCommunity(ip), 2000, g.Config().Switch.SnmpRetry)
 	endTime = time.Now().Unix()
 	swCpu.UseTime = endTime - startTime
 

@@ -30,6 +30,12 @@
     "switch": {
         "broadcastPktlimit": 0,
         "community": "cf-read",
+        "specialSw":{
+          "community":"cf_read",
+          "ipRange":[
+
+          ]
+        },
         "discardsPktlimit": 0,
         "enabled": true,
         "errorsPktlimit": 0,
@@ -397,6 +403,7 @@
         "addr": "127.0.0.1:8433",
         "enabled": true,
         "interval": 60,
-        "timeout": 1000
+        "timeout": 1000,
+        "n9e":"192.168.99.24:8011"
     }
 }

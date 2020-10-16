@@ -1,9 +1,10 @@
 package funcs
 
 import (
+	"log"
+
 	"github.com/hel2o/sw"
 	"github.com/hel2o/swcollector/g"
-	"log"
 )
 
 type SwSystem struct {
@@ -47,9 +48,9 @@ func swSystemInfo(ip string, ch chan SwSystem) {
 		ch <- swSystem
 		return
 	} else {
+		onceCommunity := g.GetCommunity(ip)
 		swSystem.Ping = ping["max"]
-
-		uptime, err := sw.SysUpTime(ip, g.Config().Switch.Community, timeout)
+		uptime, err := sw.SysUpTime(ip, onceCommunity, timeout)
 		if err != nil {
 			log.Println(err)
 			ch <- swSystem
@@ -57,28 +58,28 @@ func swSystemInfo(ip string, ch chan SwSystem) {
 		} else {
 			swSystem.Uptime = uptime
 
-			cpuUtili, err := sw.CpuUtilization(ip, g.Config().Switch.Community, timeout, 1)
+			cpuUtili, err := sw.CpuUtilization(ip, onceCommunity, timeout, 1)
 			if err != nil {
 				log.Println(err)
 			} else {
 				swSystem.Cpu = cpuUtili
 			}
 
-			memUtili, err := sw.MemUtilization(ip, g.Config().Switch.Community, timeout, 1)
+			memUtili, err := sw.MemUtilization(ip, onceCommunity, timeout, 1)
 			if err != nil {
 				log.Println(err)
 			} else {
 				swSystem.Mem = memUtili
 			}
 
-			swModel, err := sw.SysModel(ip, g.Config().Switch.Community, timeout, 1)
+			swModel, err := sw.SysModel(ip, onceCommunity, timeout, 1)
 			if err != nil {
 				log.Println(err)
 			} else {
 				swSystem.Model = swModel
 			}
 
-			swName, err := sw.SysName(ip, g.Config().Switch.Community, timeout)
+			swName, err := sw.SysName(ip, onceCommunity, timeout)
 			if err != nil {
 				log.Println(err)
 			} else {

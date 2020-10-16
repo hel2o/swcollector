@@ -26,6 +26,10 @@ type SwitchConfig struct {
 	Community   string `json:"community"`
 	SnmpTimeout int    `json:"snmpTimeout"`
 	SnmpRetry   int    `json:"snmpRetry"`
+	SpecialSw   struct {
+		Community string   `json:"community"`
+		IpRange   []string `json:"ipRange"`
+	} `json:"specialSw"`
 
 	IgnoreIface           []string `json:"ignoreIface"`
 	IgnoreOperStatus      bool     `json:"ignoreOperStatus"`
@@ -54,6 +58,7 @@ type TransferConfig struct {
 	Addr     string `json:"addr"`
 	Interval int    `json:"interval"`
 	Timeout  int    `json:"timeout"`
+	N9e      string `json:"n9e"`
 }
 
 type HttpConfig struct {

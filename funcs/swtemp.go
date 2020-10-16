@@ -47,7 +47,8 @@ func tempMetrics(ip string, ch chan SwTemp) {
 	var swTemp SwTemp
 	var startTime, endTime int64
 	startTime = time.Now().Unix()
-	temp, err := sw.Temperature(ip, g.Config().Switch.Community, 2000, g.Config().Switch.SnmpRetry)
+
+	temp, err := sw.Temperature(ip, g.GetCommunity(ip), 2000, g.Config().Switch.SnmpRetry)
 	endTime = time.Now().Unix()
 	swTemp.UseTime = endTime - startTime
 

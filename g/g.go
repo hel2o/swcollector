@@ -20,3 +20,20 @@ func ModifyRlimit() {
 		log.Fatal("Error Setting Rlimit ", err)
 	}
 }
+
+func GetCommunity(ip string) (community string) {
+	community = Config().Switch.Community
+	if InArray(ip, Config().Switch.SpecialSw.IpRange) {
+		community = Config().Switch.SpecialSw.Community
+	}
+	return
+}
+
+func InArray(str string, array []string) bool {
+	for _, s := range array {
+		if str == s {
+			return true
+		}
+	}
+	return false
+}

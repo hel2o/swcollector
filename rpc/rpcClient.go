@@ -124,12 +124,12 @@ func SendToTransfer(metrics []*model.MetricValue) {
 	if debug {
 		for _, metric := range metrics {
 			metric_tags := strings.Split(metric.Tags, ",")
-			if in_array(metric.Endpoint, debug_endpoints) && in_array(metric.Metric, debug_metrics) {
+			if g.In_array(metric.Endpoint, debug_endpoints) && g.In_array(metric.Metric, debug_metrics) {
 				if debug_tags == "" {
 					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
 					continue
 				}
-				if array_include(debug_Tags, metric_tags) {
+				if g.Array_include(debug_Tags, metric_tags) {
 					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
 				}
 			}
@@ -146,24 +146,4 @@ func SendToTransfer(metrics []*model.MetricValue) {
 		}
 	}
 	log.Println("<=", &resp)
-}
-
-func array_include(array_a []string, array_b []string) bool { //b include a
-	for _, v := range array_a {
-		if in_array(v, array_b) {
-			continue
-		} else {
-			return false
-		}
-	}
-	return true
-}
-
-func in_array(a string, array []string) bool {
-	for _, v := range array {
-		if a == v {
-			return true
-		}
-	}
-	return false
 }

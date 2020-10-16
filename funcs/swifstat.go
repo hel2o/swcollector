@@ -63,7 +63,6 @@ var (
 	pingTimeout         int
 	pingRetry           int
 	lastifmap           *LastifMap
-	community           string
 	snmpTimeout         int
 	snmpRetry           int
 	displayByBit        bool
@@ -87,7 +86,6 @@ func initVariable() {
 	fastPingMode = g.Config().Switch.FastPingMode
 	pingRetry = g.Config().Switch.PingRetry
 
-	community = g.Config().Switch.Community
 	snmpTimeout = g.Config().Switch.SnmpTimeout
 	snmpRetry = g.Config().Switch.SnmpRetry
 	limitCon = g.Config().Switch.LimitCon
@@ -458,9 +456,9 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 		var err error
 
 		if gosnmp {
-			ifList, err = sw.ListIfStats(ip, community, snmpTimeout, ignoreIface, snmpRetry, limitCon, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
+			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, ignoreIface, snmpRetry, limitCon, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
 		} else {
-			ifList, err = sw.ListIfStatsSnmpWalk(ip, community, snmpTimeout*5, ignoreIface, snmpRetry, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
+			ifList, err = sw.ListIfStatsSnmpWalk(ip, g.GetCommunity(ip), snmpTimeout*5, ignoreIface, snmpRetry, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
 		}
 
 		if err != nil {

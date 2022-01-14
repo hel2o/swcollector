@@ -58,7 +58,7 @@ type TransferConfig struct {
 	Addr     string `json:"addr"`
 	Interval int    `json:"interval"`
 	Timeout  int    `json:"timeout"`
-	N9e      string `json:"n9e"`
+	N9e      bool   `json:"n9e"`
 }
 
 type HttpConfig struct {

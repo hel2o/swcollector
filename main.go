@@ -38,7 +38,7 @@ func main() {
 	g.InitRootDir()
 	g.InitLocalIps()
 	g.InitLocalIp()
-	rpc.InitRpcClients()
+	//rpc.InitRpcClients()
 
 	if *check {
 		funcs.CheckCollector()

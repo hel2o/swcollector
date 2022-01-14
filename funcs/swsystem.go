@@ -12,14 +12,13 @@ type SwSystem struct {
 	Hostname string `json:"hostname"`
 	Model    string `json:"model"`
 	Uptime   string `json:"uptime"`
-	Cpu      int    `json:"cpu"`
-	Mem      int    `json:"mem"`
+	Cpu      uint64 `json:"cpu"`
+	Mem      uint64 `json:"mem"`
 	Ping     string `json:"ping"`
 	Conn     int    `json:"Conn"`
 }
 
 func SwSystemInfo() (swList []SwSystem) {
-
 	chs := make([]chan SwSystem, len(AliveIp))
 	for i, ip := range AliveIp {
 		chs[i] = make(chan SwSystem)

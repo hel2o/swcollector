@@ -19,7 +19,6 @@ func init() {
 	configAdminRoutes()
 	configHealthRoutes()
 	configPageRoutes()
-	configPushRoutes()
 	configSwRoutes()
 	configApiRoutes()
 }

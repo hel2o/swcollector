@@ -11,7 +11,7 @@ import (
 
 type SwCpu struct {
 	Ip      string
-	CpuUtil int
+	CpuUtil uint64
 	UseTime int64
 }
 

@@ -5,12 +5,9 @@ import (
 	"log"
 	"math"
 	"net/rpc"
-	"strings"
 	"sync"
 	"time"
 
-	"github.com/hel2o/swcollector/g"
-	"github.com/open-falcon/common/model"
 	"github.com/toolkits/net"
 )
 
@@ -86,64 +83,4 @@ func (this *SingleConnRpcClient) Call(method string, args interface{}, reply int
 	}
 
 	return nil
-}
-
-var (
-	TransferClient *SingleConnRpcClient
-)
-
-func InitRpcClients() {
-	if g.Config().Transfer.Enabled {
-		TransferClient = &SingleConnRpcClient{
-			RpcServer: g.Config().Transfer.Addr,
-			Timeout:   time.Duration(g.Config().Transfer.Timeout) * time.Millisecond,
-		}
-	}
-}
-
-func SendToTransfer(metrics []*model.MetricValue) {
-	if len(metrics) == 0 {
-		return
-	}
-
-	debug := g.Config().Debug
-	debug_endpoints := g.Config().Debugmetric.Endpoints
-	debug_metrics := g.Config().Debugmetric.Metrics
-	debug_tags := g.Config().Debugmetric.Tags
-	debug_Tags := strings.Split(debug_tags, ",")
-
-	if g.Config().SwitchHosts.Enabled {
-		hosts := g.HostConfig().Hosts
-		for i, metric := range metrics {
-			if hostname, ok := hosts[metric.Endpoint]; ok {
-				metrics[i].Endpoint = hostname
-			}
-		}
-	}
-
-	if debug {
-		for _, metric := range metrics {
-			metric_tags := strings.Split(metric.Tags, ",")
-			if g.In_array(metric.Endpoint, debug_endpoints) && g.In_array(metric.Metric, debug_metrics) {
-				if debug_tags == "" {
-					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
-					continue
-				}
-				if g.Array_include(debug_Tags, metric_tags) {
-					log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
-				}
-			}
-		}
-	}
-	var resp model.TransferResponse
-	err := TransferClient.Call("Transfer.Update", metrics, &resp)
-	if err != nil {
-		log.Println("call Transfer.Update fail", err)
-		if debug {
-			for _, metric := range metrics {
-				log.Printf("=> <Total=%d> %v\n", len(metrics), metric)
-			}
-		}
-	}
-	log.Println("<=", &resp)
 }

@@ -11,7 +11,7 @@ import (
 
 type SwTemp struct {
 	Ip      string
-	Temp    int
+	Temp    uint64
 	UseTime int64
 }
 

@@ -16,6 +16,21 @@ type IfInOutPDU struct {
 }
 
 func configApiRoutes() {
+	http.HandleFunc("/api/lastifstat", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		v := r.URL.Query()
+		ip := v.Get("ip")
+		if ip == "" {
+			RenderJson(w, "param is error")
+			return
+		}
+
+		s := map[string]interface{}{
+			"data": funcs.GetLastifStat(ip),
+		}
+		RenderJson(w, s)
+	})
+
 	http.HandleFunc("/api/ifstats", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		r.ParseForm()

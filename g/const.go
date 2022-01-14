@@ -1,9 +1,5 @@
 package g
 
-import (
-	"time"
-)
-
 // changelog:
 // 3.1.3: code refactor
 // 3.1.4: bugfix ignore configuration
@@ -22,6 +18,5 @@ import (
 // 4.0.6.2 fix Vendor bug;add remote config api
 // 4.0.6.3 fix bugs
 const (
-	VERSION          = "18.11.26"
-	COLLECT_INTERVAL = time.Second
+	VERSION = "22.1.5"
 )

@@ -67,6 +67,7 @@ function tailf() {
     tail -f $logfile
 }
 
+
 function build() {
     go build
     if [ $? -ne 0 ]; then
@@ -74,6 +75,15 @@ function build() {
     fi
     mv $module $app
     ./$app -v
+}
+
+function release() {
+    build
+    /home/work/swcollector/control stop
+    rm -rf /home/work/swcollector/falcon-swcollector
+    cp ./falcon-swcollector /home/work/swcollector
+    /home/work/swcollector/control start
+    /home/work/swcollector/control status
 }
 
 function pack() {
@@ -100,6 +110,8 @@ if [ "$1" == "" ]; then
     help
 elif [ "$1" == "stop" ];then
     stop
+elif [ "$1" == "release" ];then
+    release
 elif [ "$1" == "start" ];then
     start
 elif [ "$1" == "restart" ];then

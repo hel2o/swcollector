@@ -2,6 +2,7 @@ package funcs
 
 import (
 	"log"
+	"strings"
 	"sync"
 
 	"github.com/hel2o/swcollector/g"
@@ -31,6 +32,10 @@ func NewLastifMap() {
 		lock:   new(sync.RWMutex),
 		ifstat: make(map[string]*[]sw.IfStats),
 	}
+}
+
+func GetLastifStat(k string) *[]sw.IfStats {
+	return lastifmap.Get(k)
 }
 
 func (m *LastifMap) Get(k string) *[]sw.IfStats {
@@ -359,9 +364,9 @@ func swIfMetrics() (L []*model.MetricValue) {
 						for _, lastifStat := range *lastIfStatList {
 							if ifStat.IfIndex == lastifStat.IfIndex {
 								interval := ifStat.TS - lastifStat.TS
-								speedlimit := g.Config().Switch.Speedlimit
-								if speedlimit == 0 {
-									speedlimit = float64(ifStat.IfSpeed)
+								speedlimit := float64(ifStat.IfSpeed)
+								if speedlimit == 0 || strings.Contains(ifStat.IfName, "bond") {
+									speedlimit = g.Config().Switch.Speedlimit
 								}
 								IfHCInOctets := 8 * (float64(ifStat.IfHCInOctets) - float64(lastifStat.IfHCInOctets)) / float64(interval)
 								IfHCOutOctets := 8 * (float64(ifStat.IfHCOutOctets) - float64(lastifStat.IfHCOutOctets)) / float64(interval)

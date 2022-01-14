@@ -11,7 +11,7 @@ import (
 
 type SwMem struct {
 	Ip       string
-	MemUtili int
+	MemUtili uint64
 	UseTime  int64
 }
 

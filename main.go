@@ -24,6 +24,7 @@ func main() {
 		fmt.Println(g.VERSION)
 		os.Exit(0)
 	}
+	g.MyLog()
 	g.ParseConfig(*cfg)
 	if g.Config().SwitchHosts.Enabled {
 		hostCfg := g.Config().SwitchHosts.Hosts

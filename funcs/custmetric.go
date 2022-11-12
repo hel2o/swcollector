@@ -7,7 +7,7 @@ import (
 
 	"time"
 
-	go_snmp "github.com/hel2o/gosnmp"
+	go_snmp "github.com/gosnmp/gosnmp"
 	"github.com/hel2o/sw"
 	"github.com/hel2o/swcollector/g"
 	"github.com/open-falcon/common/model"
@@ -42,8 +42,8 @@ func CustMetrics() (L []*model.MetricValue) {
 		return
 	}
 	chs := make([]chan CustM, 0)
-	tempAliveIp := append(AliveIp, []string{"10.255.255.254", "172.25.70.252"}...)
-	for _, ip := range tempAliveIp {
+	//tempAliveIp := append(AliveIp, []string{"10.255.255.254", "172.25.70.252"}...)
+	for _, ip := range AliveIp {
 		if ip != "" {
 			for _, metric := range g.CustConfig().Metrics {
 				CustmIps := AllCustmIp(metric.IpRange)
@@ -116,16 +116,10 @@ func GetCustMetric(ip, oid string, timeout, retry int) (float64, error) {
 	var value float64
 	var err error
 	var snmpPDUs []go_snmp.SnmpPDU
-
-	for i := 0; i < retry; i++ {
-		snmpPDUs, err = sw.RunSnmp(ip, g.GetCommunity(ip), oid, method, timeout)
-		if len(snmpPDUs) > 0 && err == nil {
-			value, err = interfaceTofloat64(snmpPDUs[0].Value)
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
+	snmpPDUs, err = sw.RunSnmp(ip, g.GetCommunity(ip), oid, method, retry, timeout)
+	if len(snmpPDUs) > 0 {
+		value, err = interfaceTofloat64(snmpPDUs[0].Value)
 	}
-
 	return value, err
 }
 

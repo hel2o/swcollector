@@ -15,7 +15,7 @@ var Mappers []FuncsAndInterval
 func BuildMappers() {
 	interval := g.Config().Transfer.Interval
 	Mappers = []FuncsAndInterval{
-		FuncsAndInterval{
+		{
 			Fs: []func() []*model.MetricValue{
 				SwIfMetrics,
 				CpuMetrics,

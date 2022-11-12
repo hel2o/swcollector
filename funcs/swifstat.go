@@ -461,7 +461,13 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 		var err error
 
 		if gosnmp {
-			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, ignoreIface, snmpRetry, limitCon, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
+			var useSnmpGetNext bool
+			for _, s := range g.Config().Switch.UseSnmpGetNext {
+				if s == ip {
+					useSnmpGetNext = true
+				}
+			}
+			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, ignoreIface, snmpRetry, limitCon, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen, useSnmpGetNext)
 		} else {
 			ifList, err = sw.ListIfStatsSnmpWalk(ip, g.GetCommunity(ip), snmpTimeout*5, ignoreIface, snmpRetry, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
 		}
@@ -481,8 +487,6 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 		ch <- chIfStat
 		return
 	}
-
-	return
 }
 
 func findMaxUseTime(useTime map[string]int64) (maxIp string, maxUseTime int64) {

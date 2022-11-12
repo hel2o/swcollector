@@ -15,10 +15,11 @@ type DebugmetricConfig struct {
 }
 
 type SwitchConfig struct {
-	Enabled  bool     `json:"enabled"`
-	IpRange  []string `json:"ipRange"`
-	VpnRange []string `json:"vpnRange"`
-	Gosnmp   bool     `json:"gosnmp"`
+	Enabled        bool     `json:"enabled"`
+	IpRange        []string `json:"ipRange"`
+	VpnRange       []string `json:"vpnRange"`
+	UseSnmpGetNext []string `json:"useSnmpGetNext"`
+	Gosnmp         bool     `json:"gosnmp"`
 
 	PingTimeout int `json:"pingTimeout"`
 	PingRetry   int `json:"pingRetry"`

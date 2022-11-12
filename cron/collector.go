@@ -37,10 +37,24 @@ func collect(sec int64, fns []func() []*model.MetricValue) {
 }
 
 func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
+	now := time.Now()
 	var mvs []*model.MetricValue
+	var chs = make([]chan []*model.MetricValue, len(fns))
+	for i, fn := range fns {
 
-	for _, fn := range fns {
-		items := fn()
+		chs[i] = make(chan []*model.MetricValue)
+
+		go func(ch chan []*model.MetricValue, f func() []*model.MetricValue) {
+			ch <- f()
+		}(chs[i], fn)
+
+		//for _, mv := range items {
+		//	mvs = append(mvs, mv)
+		//}
+	}
+
+	for _, ch := range chs {
+		items := <-ch
 		if items == nil {
 			continue
 		}
@@ -49,15 +63,15 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 			continue
 		}
 
-		for _, mv := range items {
-			mvs = append(mvs, mv)
-		}
+		mvs = append(mvs, items...)
 	}
+
+	log.Println("All processes have been completed, take", time.Since(now))
 
 	startTime := time.Now()
 
 	//分批次传给transfer和N9E
-	n := 30000
+	n := 50000
 	lenMvs := len(mvs)
 
 	div := lenMvs / n

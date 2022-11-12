@@ -1,7 +1,6 @@
 package http
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -17,7 +16,7 @@ type IfInOutPDU struct {
 
 func configApiRoutes() {
 	http.HandleFunc("/api/lastifstat", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-AllowDst-Origin", "*")
 		v := r.URL.Query()
 		ip := v.Get("ip")
 		if ip == "" {
@@ -32,16 +31,17 @@ func configApiRoutes() {
 	})
 
 	http.HandleFunc("/api/ifstats", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		r.ParseForm()
-		ip := r.PostFormValue("ip")
+		w.Header().Set("Access-Control-AllowDst-Origin", "*")
+		v := r.URL.Query()
+		ip := v.Get("ip")
 		if ip == "" {
+			RenderJson(w, "param is error")
 			return
 		}
 
-		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), g.Config().Switch.SnmpTimeout, []string{}, g.Config().Switch.SnmpRetry, g.Config().Switch.LimitCon, true, false, true, true, true, true, true, true)
+		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), 10000, []string{}, 1, g.Config().Switch.LimitCon, true, false, true, true, true, true, true, true, false)
 		if err != nil {
-			log.Println(err)
+			RenderJson(w, err)
 			return
 		}
 		s := map[string]interface{}{
@@ -51,11 +51,12 @@ func configApiRoutes() {
 	})
 
 	http.HandleFunc("/api/ifhcinout", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		r.ParseForm()
-		ip := r.PostFormValue("ip")
-		index := r.PostFormValue("index")
+		w.Header().Set("Access-Control-AllowDst-Origin", "*")
+		v := r.URL.Query()
+		ip := v.Get("ip")
+		index := v.Get("index")
 		if ip == "" || index == "" {
+			RenderJson(w, "ip or index is null")
 			return
 		}
 		var ifInOut IfInOutPDU
@@ -64,12 +65,12 @@ func configApiRoutes() {
 		outOid := "1.3.6.1.2.1.31.1.1.1.10." + index
 		ifInOut.In, err = funcs.GetCustMetric(ip, inOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 		if err != nil {
-			log.Println(err)
+			RenderJson(w, err)
 			return
 		}
 		ifInOut.Out, err = funcs.GetCustMetric(ip, outOid, g.Config().Switch.SnmpTimeout, g.Config().Switch.SnmpRetry)
 		if err != nil {
-			log.Println(err)
+			RenderJson(w, err)
 			return
 		}
 		s := map[string]interface{}{

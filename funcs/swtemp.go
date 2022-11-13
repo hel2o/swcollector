@@ -12,7 +12,7 @@ import (
 type SwTemp struct {
 	Ip      string
 	Temp    uint64
-	UseTime int64
+	UseTime time.Duration
 }
 
 func TempMetrics() (L []*model.MetricValue) {
@@ -24,7 +24,7 @@ func TempMetrics() (L []*model.MetricValue) {
 			go tempMetrics(ip, chs[i])
 		}
 	}
-	var useTime = make(map[string]int64, len(chs))
+	var useTime = make(map[string]time.Duration, len(chs))
 
 	for _, ch := range chs {
 		swTemp, ok := <-ch
@@ -32,25 +32,23 @@ func TempMetrics() (L []*model.MetricValue) {
 			continue
 		}
 		useTime[swTemp.Ip] = swTemp.UseTime
-
 		L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, "switch.Temperature", swTemp.Temp))
-
+		L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, SwcollectorTakeSec, swTemp.UseTime.Seconds(), "type=temperature"))
 	}
 	endTime := time.Now()
 	maxIp, maxUseTime := findMaxUseTime(useTime)
-	log.Printf("UpdateTemperature complete. Process time %s. Used max time is %s, Latency=%ds.", endTime.Sub(startTime), maxIp, maxUseTime)
+	log.Printf("Update Temperature complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 
 	return L
 }
 
 func tempMetrics(ip string, ch chan SwTemp) {
 	var swTemp SwTemp
-	var startTime, endTime int64
-	startTime = time.Now().Unix()
+	var startTime time.Time
+	startTime = time.Now()
 
-	temp, err := sw.Temperature(ip, g.GetCommunity(ip), 2000, g.Config().Switch.SnmpRetry)
-	endTime = time.Now().Unix()
-	swTemp.UseTime = endTime - startTime
+	temp, err := sw.Temperature(ip, g.GetCommunity(ip), 5000, g.Config().Switch.SnmpRetry)
+	swTemp.UseTime = time.Since(startTime)
 
 	if err != nil {
 		if g.Config().Debug {

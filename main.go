@@ -26,10 +26,7 @@ func main() {
 	}
 	g.MyLog()
 	g.ParseConfig(*cfg)
-	if g.Config().SwitchHosts.Enabled {
-		hostCfg := g.Config().SwitchHosts.Hosts
-		g.ParseHostConfig(hostCfg)
-	}
+
 	if g.Config().CustomMetrics.Enabled {
 		custMetrics := g.Config().CustomMetrics.Template
 		g.ParseCustConfig(custMetrics)

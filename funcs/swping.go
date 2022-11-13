@@ -12,22 +12,23 @@ import (
 type SwPing struct {
 	Ip      string
 	Ping    float64
-	UseTime int64
+	UseTime time.Duration
 }
 
 func PingMetrics() (L []*model.MetricValue) {
 	startTime := time.Now()
-	vpns := g.Config().Switch.VpnRange
-	ipRange := g.Config().Switch.IpRange
-	allIp := append(ipRange, vpns...)
-	chs := make([]chan SwPing, len(allIp))
-	for i, ip := range allIp {
+	var ipRange []string
+	for _, ipc := range g.Config().Switch.IpRange {
+		ipRange = append(ipRange, ipc.Ip)
+	}
+	chs := make([]chan SwPing, len(ipRange))
+	for i, ip := range ipRange {
 		if ip != "" {
 			chs[i] = make(chan SwPing)
 			go pingMetrics(ip, chs[i])
 		}
 	}
-	var useTime = make(map[string]int64, len(chs))
+	var useTime = make(map[string]time.Duration, len(chs))
 	for _, ch := range chs {
 		swPing := <-ch
 		useTime[swPing.Ip] = swPing.UseTime
@@ -37,27 +38,27 @@ func PingMetrics() (L []*model.MetricValue) {
 				log.Println(swPing.Ip, swPing.Ping)
 			}
 		}
+		L = append(L, GaugeValueIp(time.Now().Unix(), swPing.Ip, SwcollectorTakeSec, swPing.UseTime.Seconds(), "type=ping"))
 		L = append(L, GaugeValueIp(time.Now().Unix(), swPing.Ip, "switch.Ping", swPing.Ping))
 	}
 	endTime := time.Now()
 	maxIp, maxUseTime := findMaxUseTime(useTime)
-	log.Printf("UpdatePing complete. Process time %s. Used max time is %s, Latency=%ds.", endTime.Sub(startTime), maxIp, maxUseTime)
+	log.Printf("Update Ping complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 
 	return L
 }
 
 func pingMetrics(ip string, ch chan SwPing) {
 	var swPing SwPing
-	var startTime, endTime int64
+	var startTime time.Time
 
-	startTime = time.Now().Unix()
+	startTime = time.Now()
 	timeout := g.Config().Switch.PingTimeout
 	retry := g.Config().Switch.PingRetry
 	fastPingMode := g.Config().Switch.FastPingMode
 	rtt, err := sw.PingRtt(ip, timeout, retry, fastPingMode)
 
-	endTime = time.Now().Unix()
-	swPing.UseTime = endTime - startTime
+	swPing.UseTime = time.Since(startTime)
 
 	if err != nil {
 		log.Println(ip, err)

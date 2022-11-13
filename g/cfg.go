@@ -13,13 +13,17 @@ type DebugmetricConfig struct {
 	Metrics   []string `json:"metrics`
 	Tags      string   `json:"tags"`
 }
-
+type IpCommunity struct {
+	Ip        string `json:"ip"`
+	Hostname  string `json:"hostname"`
+	Community string `json:"community"`
+	OnlyPing  bool   `json:"OnlyPing"`
+}
 type SwitchConfig struct {
-	Enabled        bool     `json:"enabled"`
-	IpRange        []string `json:"ipRange"`
-	VpnRange       []string `json:"vpnRange"`
-	UseSnmpGetNext []string `json:"useSnmpGetNext"`
-	Gosnmp         bool     `json:"gosnmp"`
+	Enabled        bool          `json:"enabled"`
+	IpRange        []IpCommunity `json:"ipRange"`
+	UseSnmpGetNext []string      `json:"useSnmpGetNext"`
+	Gosnmp         bool          `json:"gosnmp"`
 
 	PingTimeout int `json:"pingTimeout"`
 	PingRetry   int `json:"pingRetry"`
@@ -27,10 +31,6 @@ type SwitchConfig struct {
 	Community   string `json:"community"`
 	SnmpTimeout int    `json:"snmpTimeout"`
 	SnmpRetry   int    `json:"snmpRetry"`
-	SpecialSw   struct {
-		Community string   `json:"community"`
-		IpRange   []string `json:"ipRange"`
-	} `json:"specialSw"`
 
 	IgnoreIface           []string `json:"ignoreIface"`
 	IgnoreOperStatus      bool     `json:"ignoreOperStatus"`

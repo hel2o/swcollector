@@ -41,16 +41,10 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 	var mvs []*model.MetricValue
 	var chs = make([]chan []*model.MetricValue, len(fns))
 	for i, fn := range fns {
-
 		chs[i] = make(chan []*model.MetricValue)
-
 		go func(ch chan []*model.MetricValue, f func() []*model.MetricValue) {
 			ch <- f()
 		}(chs[i], fn)
-
-		//for _, mv := range items {
-		//	mvs = append(mvs, mv)
-		//}
 	}
 
 	for _, ch := range chs {
@@ -87,6 +81,16 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 		time.Sleep(100 * time.Millisecond)
 		if g.Config().Transfer.N9e {
 			var n9eSend []*tools.N9eMetric
+			if i == 1 {
+				var tagsMap = make(map[string]string)
+				tagsMap["type"] = "all"
+				n9eSend = append(n9eSend, &tools.N9eMetric{
+					Metric:       funcs.SwcollectorTakeSec,
+					Timestamp:    time.Now().Unix(),
+					ValueUnTyped: time.Since(now).Seconds(),
+					Tags:         tagsMap,
+				})
+			}
 			for _, v := range mvsSend {
 				var tagsMap = make(map[string]string)
 				for _, tags := range strings.Split(v.Tags, ",") {
@@ -95,10 +99,8 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 						tagsMap[t[0]] = t[1]
 					}
 				}
-				var alias string
-				if p := strings.LastIndex(g.HostConfig().Hosts[v.Endpoint], "-"); p > -1 {
-					alias = g.HostConfig().Hosts[v.Endpoint][:p]
-				} else {
+				alias := g.GetHostname(v.Endpoint)
+				if len(alias) == 0 {
 					continue
 				}
 				tagsMap["alias"] = alias

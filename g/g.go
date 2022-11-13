@@ -26,12 +26,23 @@ func ModifyRlimit() {
 
 func GetCommunity(ip string) (community string) {
 	community = Config().Switch.Community
-	if InArray(ip, Config().Switch.SpecialSw.IpRange) {
-		community = Config().Switch.SpecialSw.Community
+	for _, ipc := range Config().Switch.IpRange {
+		if ip == ipc.Ip {
+			community = ipc.Community
+			break
+		}
 	}
 	return
 }
-
+func GetHostname(ip string) (hostname string) {
+	for _, ipc := range Config().Switch.IpRange {
+		if ip == ipc.Ip {
+			hostname = ipc.Hostname
+			break
+		}
+	}
+	return
+}
 func InArray(str string, array []string) bool {
 	for _, s := range array {
 		if str == s {

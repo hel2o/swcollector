@@ -42,7 +42,6 @@ func CustMetrics() (L []*model.MetricValue) {
 		return
 	}
 	chs := make([]chan CustM, 0)
-	//tempAliveIp := append(AliveIp, []string{"10.255.255.254", "172.25.70.252"}...)
 	for _, ip := range AliveIp {
 		if ip != "" {
 			for _, metric := range g.CustConfig().Metrics {
@@ -61,7 +60,9 @@ func CustMetrics() (L []*model.MetricValue) {
 		if !ok {
 			continue
 		}
+
 		for _, custmmetric := range custm.custmMetrics {
+			L = append(L, GaugeValueIp(time.Now().Unix(), custm.Ip, SwcollectorTakeSec, time.Since(startTime).Seconds(), "type=custom"))
 			if custmmetric.metrictype == "GAUGE" {
 				L = append(L, GaugeValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
 			}
@@ -72,7 +73,8 @@ func CustMetrics() (L []*model.MetricValue) {
 
 	}
 	endTime := time.Now()
-	log.Printf("UpdateCustmetric complete. Process time %s.", endTime.Sub(startTime))
+
+	log.Printf("Update Custmetric complete. Process time %s.", endTime.Sub(startTime))
 
 	return L
 }

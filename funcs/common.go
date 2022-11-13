@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const SwcollectorTakeSec = "swcollector.take.sec"
+
 func NewMetricValue(metric string, val interface{}, dataType string, tags ...string) *model.MetricValue {
 	mv := model.MetricValue{
 		Metric: metric,

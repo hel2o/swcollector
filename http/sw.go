@@ -10,13 +10,16 @@ import (
 )
 
 func configSwRoutes() {
-
 	http.HandleFunc("/page/sw/time", func(w http.ResponseWriter, req *http.Request) {
 		RenderDataJson(w, time.Now().Format("2006-01-02 15:04:05"))
 	})
 
 	http.HandleFunc("/page/sw/iprange", func(w http.ResponseWriter, req *http.Request) {
-		RenderDataJson(w, strings.Join(g.Config().Switch.IpRange, "\n"))
+		var list []string
+		for _, ipc := range g.Config().Switch.IpRange {
+			list = append(list, ipc.Hostname+"-"+ipc.Ip+"-"+ipc.Community)
+		}
+		RenderDataJson(w, strings.Join(list, "\n"))
 	})
 
 	http.HandleFunc("/page/sw/live", func(w http.ResponseWriter, req *http.Request) {

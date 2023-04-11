@@ -49,7 +49,7 @@ func swSystemInfo(ip string, ch chan SwSystem) {
 	} else {
 		onceCommunity := g.GetCommunity(ip)
 		swSystem.Ping = ping["max"]
-		uptime, err := sw.SysUpTime(ip, onceCommunity, timeout)
+		uptime, err := sw.SysUpTime(ip, onceCommunity, 1, timeout)
 		if err != nil {
 			log.Println(err)
 			ch <- swSystem

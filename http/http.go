@@ -18,8 +18,6 @@ type Dto struct {
 func init() {
 	configAdminRoutes()
 	configHealthRoutes()
-	configPageRoutes()
-	configSwRoutes()
 	configApiRoutes()
 }
 

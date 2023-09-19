@@ -16,28 +16,30 @@ type SwMem struct {
 }
 
 func MemMetrics() (L []*model.MetricValue) {
-	startTime := time.Now()
-	chs := make([]chan SwMem, len(AliveIp))
-	for i, ip := range AliveIp {
-		if ip != "" {
-			chs[i] = make(chan SwMem)
-			go memMetrics(ip, chs[i])
+	if len(AliveIp) > 0 {
+		startTime := time.Now()
+		chs := make([]chan SwMem, len(AliveIp))
+		for i, ip := range AliveIp {
+			if ip != "" {
+				chs[i] = make(chan SwMem)
+				go memMetrics(ip, chs[i])
+			}
 		}
-	}
-	var useTime = make(map[string]time.Duration, len(chs))
+		var useTime = make(map[string]time.Duration, len(chs))
 
-	for _, ch := range chs {
-		swMem, ok := <-ch
-		if !ok {
-			continue
+		for _, ch := range chs {
+			swMem, ok := <-ch
+			if !ok {
+				continue
+			}
+			useTime[swMem.Ip] = swMem.UseTime
+			L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, SwcollectorTakeSec, swMem.UseTime.Seconds(), "type=memory"))
+			L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, "switch.MemUtilization", swMem.MemUtili))
 		}
-		useTime[swMem.Ip] = swMem.UseTime
-		L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, SwcollectorTakeSec, swMem.UseTime.Seconds(), "type=memory"))
-		L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, "switch.MemUtilization", swMem.MemUtili))
+		endTime := time.Now()
+		maxIp, maxUseTime := findMaxUseTime(useTime)
+		log.Printf("Update MemUtilization complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 	}
-	endTime := time.Now()
-	maxIp, maxUseTime := findMaxUseTime(useTime)
-	log.Printf("Update MemUtilization complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 	return L
 }
 

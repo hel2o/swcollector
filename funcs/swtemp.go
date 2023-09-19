@@ -16,29 +16,30 @@ type SwTemp struct {
 }
 
 func TempMetrics() (L []*model.MetricValue) {
-	startTime := time.Now()
-	chs := make([]chan SwTemp, len(AliveIp))
-	for i, ip := range AliveIp {
-		if ip != "" {
-			chs[i] = make(chan SwTemp)
-			go tempMetrics(ip, chs[i])
+	if len(AliveIp) > 0 {
+		startTime := time.Now()
+		chs := make([]chan SwTemp, len(AliveIp))
+		for i, ip := range AliveIp {
+			if ip != "" {
+				chs[i] = make(chan SwTemp)
+				go tempMetrics(ip, chs[i])
+			}
 		}
-	}
-	var useTime = make(map[string]time.Duration, len(chs))
+		var useTime = make(map[string]time.Duration, len(chs))
 
-	for _, ch := range chs {
-		swTemp, ok := <-ch
-		if !ok {
-			continue
+		for _, ch := range chs {
+			swTemp, ok := <-ch
+			if !ok {
+				continue
+			}
+			useTime[swTemp.Ip] = swTemp.UseTime
+			L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, "switch.Temperature", swTemp.Temp))
+			L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, SwcollectorTakeSec, swTemp.UseTime.Seconds(), "type=temperature"))
 		}
-		useTime[swTemp.Ip] = swTemp.UseTime
-		L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, "switch.Temperature", swTemp.Temp))
-		L = append(L, GaugeValueIp(time.Now().Unix(), swTemp.Ip, SwcollectorTakeSec, swTemp.UseTime.Seconds(), "type=temperature"))
+		endTime := time.Now()
+		maxIp, maxUseTime := findMaxUseTime(useTime)
+		log.Printf("Update Temperature complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 	}
-	endTime := time.Now()
-	maxIp, maxUseTime := findMaxUseTime(useTime)
-	log.Printf("Update Temperature complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
-
 	return L
 }
 
@@ -57,7 +58,6 @@ func tempMetrics(ip string, ch chan SwTemp) {
 		close(ch)
 		return
 	}
-
 	swTemp.Ip = ip
 	swTemp.Temp = temp
 	ch <- swTemp

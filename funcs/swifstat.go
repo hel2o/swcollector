@@ -136,6 +136,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 			g.ParseCustConfig(g.Config().CustomMetrics.Template)
 		}
 		AliveIp = nil
+		sw.VendorMap = sync.Map{}
 	}
 	initVariable()
 	ts := time.Now().Unix()

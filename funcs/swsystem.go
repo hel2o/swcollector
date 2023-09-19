@@ -38,7 +38,7 @@ func swSystemInfo(ip string, ch chan SwSystem) {
 	swSystem.Ip = ip
 
 	//ping timeout.Millisecond
-	timeout := 1000
+	timeout := 10000
 	pingCount := 1
 
 	ping, err := sw.PingStatSummary(ip, pingCount, timeout)

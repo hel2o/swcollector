@@ -16,28 +16,30 @@ type SwCpu struct {
 }
 
 func CpuMetrics() (L []*model.MetricValue) {
-	startTime := time.Now()
-	chs := make([]chan SwCpu, len(AliveIp))
-	for i, ip := range AliveIp {
-		if ip != "" {
-			chs[i] = make(chan SwCpu)
-			go cpuMetrics(ip, chs[i])
+	if len(AliveIp) > 0 {
+		startTime := time.Now()
+		chs := make([]chan SwCpu, len(AliveIp))
+		for i, ip := range AliveIp {
+			if ip != "" {
+				chs[i] = make(chan SwCpu)
+				go cpuMetrics(ip, chs[i])
+			}
 		}
-	}
-	var useTime = make(map[string]time.Duration, len(chs))
+		var useTime = make(map[string]time.Duration, len(chs))
 
-	for _, ch := range chs {
-		swCpu, ok := <-ch
-		if !ok {
-			continue
+		for _, ch := range chs {
+			swCpu, ok := <-ch
+			if !ok {
+				continue
+			}
+			useTime[swCpu.Ip] = swCpu.UseTime
+			L = append(L, GaugeValueIp(time.Now().Unix(), swCpu.Ip, SwcollectorTakeSec, swCpu.UseTime.Seconds(), "type=cpu"))
+			L = append(L, GaugeValueIp(time.Now().Unix(), swCpu.Ip, "switch.CpuUtilization", swCpu.CpuUtil))
 		}
-		useTime[swCpu.Ip] = swCpu.UseTime
-		L = append(L, GaugeValueIp(time.Now().Unix(), swCpu.Ip, SwcollectorTakeSec, swCpu.UseTime.Seconds(), "type=cpu"))
-		L = append(L, GaugeValueIp(time.Now().Unix(), swCpu.Ip, "switch.CpuUtilization", swCpu.CpuUtil))
+		endTime := time.Now()
+		maxIp, maxUseTime := findMaxUseTime(useTime)
+		log.Printf("Update CpuUtilization complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 	}
-	endTime := time.Now()
-	maxIp, maxUseTime := findMaxUseTime(useTime)
-	log.Printf("Update CpuUtilization complete. Process time %s. Used max time is %s, Latency=%s.", endTime.Sub(startTime), maxIp, maxUseTime.String())
 	return L
 }
 

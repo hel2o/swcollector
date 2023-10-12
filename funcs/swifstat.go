@@ -169,6 +169,9 @@ func swIfMetrics() (L []*model.MetricValue) {
 			if chIfStat.PingResult == true && !slice.ContainsString(AliveIp, chIfStat.Ip) {
 				AliveIp = append(AliveIp, chIfStat.Ip)
 			}
+			if chIfStat.PingResult == false && slice.ContainsString(AliveIp, chIfStat.Ip) {
+				AliveIp = g.DeleteSlice(AliveIp, chIfStat.Ip)
+			}
 			if chIfStat.IfStatsList != nil {
 				useTime[chIfStat.Ip] = chIfStat.UseTime
 				if g.Config().Debug {

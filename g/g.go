@@ -52,6 +52,17 @@ func InArray(str string, array []string) bool {
 	return false
 }
 
+func DeleteSlice(a []string, elem string) []string {
+	j := 0
+	for _, v := range a {
+		if v != elem {
+			a[j] = v
+			j++
+		}
+	}
+	return a[:j]
+}
+
 var (
 	logFileName = flag.String("log", "var/app.log", "Log file name")
 )

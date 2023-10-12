@@ -24,7 +24,7 @@ type CustmMetric struct {
 	metrictype string
 }
 
-func AllCustmIp(ipRange []string) (allIp []string) {
+func AllCustomIp(ipRange []string) (allIp []string) {
 	if len(ipRange) > 0 {
 		for _, sip := range ipRange {
 			aip := sw.ParseIp(sip)
@@ -36,7 +36,7 @@ func AllCustmIp(ipRange []string) (allIp []string) {
 	return allIp
 }
 
-func CustMetrics() (L []*model.MetricValue) {
+func CustomMetrics() (L []*model.MetricValue) {
 	startTime := time.Now()
 	if !g.Config().CustomMetrics.Enabled {
 		return
@@ -45,29 +45,29 @@ func CustMetrics() (L []*model.MetricValue) {
 	for _, ip := range AliveIp {
 		if ip != "" {
 			for _, metric := range g.CustConfig().Metrics {
-				CustmIps := AllCustmIp(metric.IpRange)
-				if g.InArray(ip, CustmIps) {
-					chss := make(chan CustM)
-					go custMetrics(ip, metric, chss)
-					chs = append(chs, chss)
+				customIps := AllCustomIp(metric.IpRange)
+				if g.InArray(ip, customIps) {
+					ch := make(chan CustM)
+					go custMetrics(ip, metric, ch)
+					chs = append(chs, ch)
 				}
 			}
 
 		}
 	}
 	for _, ch := range chs {
-		custm, ok := <-ch
+		custom, ok := <-ch
 		if !ok {
 			continue
 		}
 
-		for _, custmmetric := range custm.custmMetrics {
-			L = append(L, GaugeValueIp(time.Now().Unix(), custm.Ip, SwcollectorTakeSec, time.Since(startTime).Seconds(), "type=custom"))
-			if custmmetric.metrictype == "GAUGE" {
-				L = append(L, GaugeValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
+		for _, customMetric := range custom.custmMetrics {
+			L = append(L, GaugeValueIp(time.Now().Unix(), custom.Ip, SwcollectorTakeSec, time.Since(startTime).Seconds(), "type=custom"))
+			if customMetric.metrictype == "GAUGE" {
+				L = append(L, GaugeValueIp(time.Now().Unix(), custom.Ip, customMetric.metric, customMetric.value, customMetric.tag))
 			}
-			if custmmetric.metrictype == "COUNTER" {
-				L = append(L, CounterValueIp(time.Now().Unix(), custm.Ip, custmmetric.metric, custmmetric.value, custmmetric.tag))
+			if customMetric.metrictype == "COUNTER" {
+				L = append(L, CounterValueIp(time.Now().Unix(), custom.Ip, customMetric.metric, customMetric.value, customMetric.tag))
 			}
 		}
 

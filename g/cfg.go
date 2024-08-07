@@ -32,7 +32,7 @@ type SwitchConfig struct {
 	SnmpTimeout int    `json:"snmpTimeout"`
 	SnmpRetry   int    `json:"snmpRetry"`
 
-	IgnoreIface           []string `json:"ignoreIface"`
+	IncludeIface          []string `json:"includeIface"`
 	IgnoreOperStatus      bool     `json:"ignoreOperStatus"`
 	Speedlimit            float64  `json:"speedlimit"`
 	IgnorePkt             bool     `json:"ignorePkt"`

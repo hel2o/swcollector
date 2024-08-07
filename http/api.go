@@ -39,7 +39,24 @@ func configApiRoutes() {
 			return
 		}
 
-		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), 10000, []string{}, 1, g.Config().Switch.LimitCon, true, false, true, true, true, true, true, true, false)
+		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), 10000, []string{"GigabitEthernet",
+			"XGigabitEthernet",
+			"Ethernet",
+			"TenGigabitEthernet",
+			"Gi",
+			"Te",
+			"Port",
+			"ge",
+			"WAN",
+			"LAN",
+			"Eth-Trunk",
+			"Ag",
+			"Bridge-Aggregation",
+			"Dialer",
+			"bond",
+			"eth",
+			"sovpn",
+			"MEth"}, 1, g.Config().Switch.LimitCon, "", true, false, true, true, true, true, true, true, true, true, true, true, true, true, false)
 		if err != nil {
 			RenderJson(w, err)
 			return

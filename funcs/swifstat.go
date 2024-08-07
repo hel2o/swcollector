@@ -72,7 +72,7 @@ var (
 	snmpRetry           int
 	displayByBit        bool
 	gosnmp              bool
-	ignoreIface         []string
+	interfaces          []string
 	ignorePkt           bool
 	ignoreBroadcastPkt  bool
 	ignoreMulticastPkt  bool
@@ -96,7 +96,7 @@ func initVariable() {
 	limitCon = g.Config().Switch.LimitCon
 
 	gosnmp = g.Config().Switch.Gosnmp
-	ignoreIface = g.Config().Switch.IgnoreIface
+	interfaces = g.Config().Switch.IncludeIface
 	ignorePkt = g.Config().Switch.IgnorePkt
 	ignoreOperStatus = g.Config().Switch.IgnoreOperStatus
 	ignoreBroadcastPkt = g.Config().Switch.IgnoreBroadcastPkt
@@ -146,7 +146,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 	chs := make([]chan ChIfStat, len(allIp))
 	limitCh := make(chan bool, g.Config().Switch.LimitConcur)
 	startTime := time.Now()
-	log.Printf("UpdateIfStats start. The number of concurrent limited to %d. IP addresses number is %d", g.Config().Switch.LimitConcur, len(allIp))
+	log.Printf("UpdateIfStats start. The number of concurrent limited to %d. RequestIP addresses number is %d", g.Config().Switch.LimitConcur, len(allIp))
 	if gosnmp {
 		log.Println("get snmp message by gosnmp")
 	} else {
@@ -175,7 +175,7 @@ func swIfMetrics() (L []*model.MetricValue) {
 			if chIfStat.IfStatsList != nil {
 				useTime[chIfStat.Ip] = chIfStat.UseTime
 				if g.Config().Debug {
-					log.Println("IP:", chIfStat.Ip, "PingResult:", chIfStat.PingResult, "len_list:", len(*chIfStat.IfStatsList), "UsedTime:", chIfStat.UseTime)
+					log.Println("RequestIP:", chIfStat.Ip, "PingResult:", chIfStat.PingResult, "len_list:", len(*chIfStat.IfStatsList), "UsedTime:", chIfStat.UseTime)
 				}
 				L = append(L, GaugeValueIp(time.Now().Unix(), chIfStat.Ip, SwcollectorTakeSec, chIfStat.UseTime.Seconds(), "type=interface"))
 
@@ -468,9 +468,25 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 					useSnmpGetNext = true
 				}
 			}
-			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, ignoreIface, snmpRetry, limitCon, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen, useSnmpGetNext)
+
+			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, interfaces, snmpRetry, limitCon, "", useSnmpGetNext, sw.IgnoreIfStats{
+				IgnorePkt:              ignorePkt,
+				IgnoreBroadcastPkt:     ignoreOperStatus,
+				IgnoreMulticastPkt:     ignoreBroadcastPkt,
+				IgnoreDiscards:         ignoreDiscards,
+				IgnoreErrors:           ignoreErrors,
+				IgnoreUnknownProtos:    ignoreUnknownProtos,
+				IgnoreOutQLen:          ignoreOutQLen,
+				IgnoreL2IfPortType:     true,
+				IgnoreL2IfPVID:         true,
+				IgnoreEthernetPortMode: true,
+				IgnoreEthernetDuplex:   true,
+				IgnoreIfAdminStatus:    true,
+				IgnoreIfDescr:          true,
+				IgnoreStpStatus:        true,
+			})
 		} else {
-			ifList, err = sw.ListIfStatsSnmpWalk(ip, g.GetCommunity(ip), snmpTimeout*5, ignoreIface, snmpRetry, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
+			ifList, err = sw.ListIfStatsSnmpWalk(ip, g.GetCommunity(ip), snmpTimeout*5, interfaces, snmpRetry, ignorePkt, ignoreOperStatus, ignoreBroadcastPkt, ignoreMulticastPkt, ignoreDiscards, ignoreErrors, ignoreUnknownProtos, ignoreOutQLen)
 		}
 
 		if err != nil {

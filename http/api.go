@@ -38,6 +38,23 @@ func configApiRoutes() {
 			RenderJson(w, "param is error")
 			return
 		}
+		var ignore = sw.IgnoreIfStats{
+			IgnoreInOutOctets:      false,
+			IgnorePkt:              true,
+			IgnoreBroadcastPkt:     true,
+			IgnoreMulticastPkt:     true,
+			IgnoreDiscards:         true,
+			IgnoreErrors:           true,
+			IgnoreUnknownProtos:    true,
+			IgnoreOutQLen:          true,
+			IgnoreL2IfPortType:     true,
+			IgnoreL2IfPVID:         true,
+			IgnoreEthernetPortMode: true,
+			IgnoreEthernetDuplex:   true,
+			IgnoreIfAdminStatus:    true,
+			IgnoreIfDesc:           true,
+			IgnoreStpStatus:        true,
+		}
 
 		ifStatsList, err := sw.ListIfStats(ip, g.GetCommunity(ip), 10000, []string{"GigabitEthernet",
 			"XGigabitEthernet",
@@ -56,7 +73,7 @@ func configApiRoutes() {
 			"bond",
 			"eth",
 			"sovpn",
-			"MEth"}, 1, g.Config().Switch.LimitCon, "", true, false, true, true, true, true, true, true, true, true, true, true, true, true, false)
+			"MEth"}, 1, g.Config().Switch.LimitCon, "", true, ignore)
 		if err != nil {
 			RenderJson(w, err)
 			return

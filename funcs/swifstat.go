@@ -470,9 +470,10 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 			}
 
 			ifList, err = sw.ListIfStats(ip, g.GetCommunity(ip), snmpTimeout, interfaces, snmpRetry, limitCon, "", useSnmpGetNext, sw.IgnoreIfStats{
+				IgnoreInOutOctets:      false,
 				IgnorePkt:              ignorePkt,
-				IgnoreBroadcastPkt:     ignoreOperStatus,
-				IgnoreMulticastPkt:     ignoreBroadcastPkt,
+				IgnoreBroadcastPkt:     ignoreBroadcastPkt,
+				IgnoreMulticastPkt:     ignoreMulticastPkt,
 				IgnoreDiscards:         ignoreDiscards,
 				IgnoreErrors:           ignoreErrors,
 				IgnoreUnknownProtos:    ignoreUnknownProtos,
@@ -482,7 +483,7 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 				IgnoreEthernetPortMode: true,
 				IgnoreEthernetDuplex:   true,
 				IgnoreIfAdminStatus:    true,
-				IgnoreIfDescr:          true,
+				IgnoreIfDesc:           true,
 				IgnoreStpStatus:        true,
 			})
 		} else {

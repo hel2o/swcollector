@@ -21,6 +21,7 @@ func BuildMappers() {
 				CpuMetrics,
 				MemMetrics,
 				TempMetrics,
+				FanMetrics,
 				PingMetrics,
 				CustomMetrics,
 			},

@@ -156,7 +156,6 @@ func swIfMetrics() (L []*model.MetricValue) {
 		chs[i] = make(chan ChIfStat)
 		limitCh <- true
 		go coreSwIfMetrics(ip, chs[i], limitCh)
-		time.Sleep(5 * time.Millisecond)
 	}
 	var useTime = make(map[string]time.Duration, len(chs))
 	for i, ch := range chs {
@@ -451,7 +450,7 @@ func coreSwIfMetrics(ip string, ch chan ChIfStat, limitCh chan bool) {
 	chIfStat.Ip = ip
 	chIfStat.PingResult = pingResult
 
-	if !pingResult {
+	if !pingResult || ip == "10.161.200.254" {
 		endTime = time.Now()
 		chIfStat.UseTime = endTime.Sub(startTime)
 		<-limitCh

@@ -10,9 +10,9 @@ import (
 )
 
 type SwMem struct {
-	Ip       string
-	MemUtili uint64
-	UseTime  time.Duration
+	Ip      string
+	MemUtil uint64
+	UseTime time.Duration
 }
 
 func MemMetrics() (L []*model.MetricValue) {
@@ -34,7 +34,7 @@ func MemMetrics() (L []*model.MetricValue) {
 			}
 			useTime[swMem.Ip] = swMem.UseTime
 			L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, SwcollectorTakeSec, swMem.UseTime.Seconds(), "type=memory"))
-			L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, "switch.MemUtilization", swMem.MemUtili))
+			L = append(L, GaugeValueIp(time.Now().Unix(), swMem.Ip, "switch.MemUtilization", swMem.MemUtil))
 		}
 		endTime := time.Now()
 		maxIp, maxUseTime := findMaxUseTime(useTime)
@@ -60,7 +60,7 @@ func memMetrics(ip string, ch chan SwMem) {
 	}
 
 	swMem.Ip = ip
-	swMem.MemUtili = memUtili
+	swMem.MemUtil = memUtili
 
 	ch <- swMem
 

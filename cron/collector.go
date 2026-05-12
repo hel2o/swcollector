@@ -118,7 +118,7 @@ func MetricToTransfer(sec int64, fns []func() []*model.MetricValue) {
 				log.Println("Push data to N9E error", err, r)
 			} else {
 				log.Printf(
-					"<= N9E <Total=%v, Success=%d, Fail=%d, Latency=%v, Message:%s>\n",
+					"<= N9E <Total=%v, Success=%d, Fail=%d, Latency=%v, Content:%s>\n",
 					len(n9eSend),
 					r.Success, r.Fail,
 					time.Now().Sub(startPushTime),

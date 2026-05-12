@@ -1,12 +1,15 @@
 package g
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
 	"runtime"
 	"syscall"
+	"time"
+
+	"github.com/hel2o/management-system/models"
+	"github.com/hel2o/management-system/tools"
 )
 
 func init() {
@@ -14,6 +17,25 @@ func init() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
 
+var KPR *tools.KeyPairReload
+
+func StartSSL() {
+	var err error
+	KPR, err = tools.NewKeyPairReload("network.clifford.cn")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+	go tools.AutoReport(models.AppReportParams{
+		Agent:     "swcollector",
+		Host:      "network.clifford.cn",
+		Version:   VERSION,
+		ReloadSSL: true,
+		Journal:   true,
+		Api:       "https://network.clifford.cn:1989/reloadssl",
+		StartTime: time.Now(),
+	})
+}
 func ModifyRlimit() {
 	var rLimit syscall.Rlimit
 	rLimit.Max = 999999
@@ -61,19 +83,4 @@ func DeleteSlice(a []string, elem string) []string {
 		}
 	}
 	return a[:j]
-}
-
-var (
-	logFileName = flag.String("log", "var/app.log", "Log file name")
-)
-
-func MyLog() {
-	logFile, logErr := os.OpenFile(*logFileName, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
-	if logErr != nil {
-		fmt.Println("Fail to find", *logFile, "APP start Failed")
-		os.Exit(1)
-	}
-
-	log.SetOutput(logFile)
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
